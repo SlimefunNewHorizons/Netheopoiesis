@@ -193,7 +193,7 @@ public abstract class NetherSeed extends SlimefunItem implements NetherPlant, Se
             final Block middleBlock = motherBlock.getRelative(face);
             // There must be space for the new block
             if (middleBlock.getType() != Material.AIR) {
-                return;
+                continue;
             }
             final Block potentialMate = middleBlock.getRelative(face);
             final SlimefunItem mateItem = BlockStorage.check(potentialMate);
@@ -208,10 +208,15 @@ public abstract class NetherSeed extends SlimefunItem implements NetherPlant, Se
                     // Breed was a success - spawn child, log discovery
                     final NetherSeed child = result.getMatchedPair().getChild();
                     trySetChildSeed(motherBlock.getLocation(), middleBlock, child);
-                    StatisticUtils.unlockDiscovery(getOwner(motherBlock.getLocation()), child.getId());
+                    final UUID owner = getOwner(motherBlock.getLocation());
+                    if (owner != null) {
+                        StatisticUtils.unlockDiscovery(owner, child.getId());
+                    }
+                    break;
                 } else if (result.getResultType() == BreedResultType.SPREAD) {
                     // Breed failed, spread success - spawn copy of mother
                     trySetChildSeed(motherBlock.getLocation(), middleBlock, mother);
+                    break;
                 }
             }
         }
@@ -224,7 +229,11 @@ public abstract class NetherSeed extends SlimefunItem implements NetherPlant, Se
         PaperLib.getBlockState(cloneBlock, false).getState().update(true, false);
         BlockStorage.store(cloneBlock, childSeed.getId());
         BlockStorage.addBlockInfo(cloneBlock, Keys.SEED_GROWTH_STAGE, "0");
-        BlockStorage.addBlockInfo(cloneBlock, Keys.BLOCK_OWNER, getOwner(motherLocation).toString());
+        final UUID owner = getOwner(motherLocation);
+        if (owner != null) {
+            BlockStorage.addBlockInfo(cloneBlock, Keys.BLOCK_OWNER, owner.toString());
+            childSeed.addOwner(cloneBlock.getLocation(), owner);
+        }
         breedSuccess(cloneBlock.getLocation());
     }
 
@@ -259,11 +268,20 @@ public abstract class NetherSeed extends SlimefunItem implements NetherPlant, Se
         };
     }
 
-    @Nonnull
+    @Nullable
     public UUID getOwner(@Nonnull Location location) {
         UUID uuid = ownerCache.get(location);
-        // Owner cannot be null if called correctly
-        Preconditions.checkNotNull(uuid, "Owner is null, has this been called correctly");
+        if (uuid == null) {
+            final String ownerUuidString = BlockStorage.getLocationInfo(location, Keys.BLOCK_OWNER);
+            if (ownerUuidString != null) {
+                try {
+                    uuid = UUID.fromString(ownerUuidString);
+                    ownerCache.put(location, uuid);
+                } catch (IllegalArgumentException ignored) {
+                    // Ignore unparseable UUID string
+                }
+            }
+        }
         return uuid;
     }
 

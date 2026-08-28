@@ -32,8 +32,10 @@ public final class ProtectionUtils {
         return hasPermission(player, block.getLocation(), interaction);
     }
 
-    @ParametersAreNonnullByDefault
     public static boolean hasPermission(UUID player, Location location, Interaction interaction) {
+        if (player == null) {
+            return false;
+        }
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(player);
         return Slimefun.getProtectionManager().hasPermission(offlinePlayer, location, interaction);
     }

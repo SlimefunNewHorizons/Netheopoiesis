@@ -28,6 +28,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
@@ -197,11 +198,20 @@ public class BeaconSiphoningBlock extends SlimefunItem implements PurificationDr
         };
     }
 
-    @Nonnull
+    @Nullable
     public UUID getOwner(@Nonnull Location location) {
         UUID uuid = ownerCache.get(location);
-        // Owner cannot be null if called correctly
-        Preconditions.checkNotNull(uuid, "Owner is null, has this been called correctly");
+        if (uuid == null) {
+            final String ownerUuidString = BlockStorage.getLocationInfo(location, Keys.BLOCK_OWNER);
+            if (ownerUuidString != null) {
+                try {
+                    uuid = UUID.fromString(ownerUuidString);
+                    ownerCache.put(location, uuid);
+                } catch (IllegalArgumentException ignored) {
+                    // Ignore unparseable UUID
+                }
+            }
+        }
         return uuid;
     }
 

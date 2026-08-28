@@ -115,7 +115,7 @@ public final class GenericTickingMethods {
             final Block block = WorldUtils.randomLocation(params.getLocation(), 3, 2, 2).getBlock();
 
             // the first block we spawn on needs to be AIR and Biome DESERT
-            if (block.getType() != Material.AIR && block.getBiome() == Biome.DESERT) {
+            if (block.getType() != Material.AIR || block.getBiome() != Biome.DESERT) {
                 return;
             }
 

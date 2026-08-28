@@ -46,7 +46,7 @@ public class CruxSpreadingSeed extends NetherSeed implements SpreadingPlant {
     public void spread(Location sourceLocation, NetherSeed seed, Config data) {
         double randomChance = ThreadLocalRandom.current().nextDouble();
 
-        if (randomChance <= (this.spreadChance * Netheopoiesis.CRUX_SPREAD_MULTIPLIER)) {
+        if (randomChance > (this.spreadChance * Netheopoiesis.CRUX_SPREAD_MULTIPLIER)) {
             // Fails chance roll
             return;
         }
