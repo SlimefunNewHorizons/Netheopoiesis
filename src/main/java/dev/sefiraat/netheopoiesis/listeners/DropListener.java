@@ -69,6 +69,14 @@ public class DropListener implements Listener {
             final double roll = ThreadLocalRandom.current().nextDouble();
             if (roll <= this.dropChance) {
                 final ItemStack drop = stackToDrop.clone();
+                org.bukkit.entity.Player player = event.getPlayer();
+                if (player != null && player.isOnline()) {
+                    java.util.Map<Integer, ItemStack> remaining = player.getInventory().addItem(drop);
+                    if (remaining.isEmpty()) {
+                        player.sendActionBar(net.kyori.adventure.text.Component.text("✦ Recolectado en mochila virtual: " + (drop.hasItemMeta() && drop.getItemMeta().hasDisplayName() ? drop.getItemMeta().getDisplayName() : drop.getType().name()), net.kyori.adventure.text.format.NamedTextColor.LIGHT_PURPLE));
+                        return;
+                    }
+                }
                 final Location location = event.getBlock().getLocation().clone().add(.5, .5, .5);
                 location.getWorld().dropItem(location, drop);
             }
