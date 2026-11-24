@@ -8,7 +8,7 @@ import dev.sefiraat.netheopoiesis.managers.ListenerManager;
 import dev.sefiraat.netheopoiesis.managers.MobManager;
 import dev.sefiraat.netheopoiesis.managers.SupportedPluginManager;
 import dev.sefiraat.netheopoiesis.managers.TaskManager;
-import com.github.drakescraft_labs.slimefun4.api.SlimefunAddon;
+import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
