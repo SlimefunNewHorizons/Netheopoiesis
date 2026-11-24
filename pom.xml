@@ -50,7 +50,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <release>21</release>
+                    <release>25</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -75,8 +75,8 @@
     </build>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.projectKey>Networks</sonar.projectKey>
         <sonar.organization>sefiraat</sonar.organization>
@@ -97,6 +97,12 @@
     </properties>
 
     <repositories>
+        <repository>
+            <id>drakescraft-builds-maven</id>
+            <url>https://pack.drakescraft.cl/builds/maven/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
         <repository>
             <id>minecraft-libraries</id>
             <url>https://libraries.minecraft.net</url>
@@ -130,7 +136,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.11-R0.1-SNAPSHOT</version>
+            <version>26.2.build.129-stable</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
